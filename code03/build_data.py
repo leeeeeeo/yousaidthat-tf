@@ -22,7 +22,7 @@ parser.add_argument(
     '--dataset', help='which dataset to process', default='lrw', type=str)
 parser.add_argument('--device', help='which device?', type=str)
 parser.add_argument(
-    '--func', help='txt: generate dataset mp4 path txt, data: preprocess dataset， tfrecords: build tfrecords', type=str)
+    '--func', help='txt: generate dataset mp4 path txt, data: preprocess dataset, tfrecords: build tfrecords', type=str)
 args = parser.parse_args()
 
 
@@ -143,6 +143,7 @@ def process_one_video(video_path):
             face_gt = cv2.resize(face_gt, (109, 109))
             '''mfcc_gt'''
             mfcc_gt = mfcc[1:, mfcc_start:mfcc_end]
+            mfcc_gt = np.reshape(mfcc_gt, (12, 35, 1))
             '''identity1 & identity5'''
             identity1 = random.sample(face_list, 1)
             identity1 = identity1[0]
