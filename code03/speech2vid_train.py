@@ -18,7 +18,7 @@ import logging
 import traceback
 
 
-BATCH_SIZE = 1
+BATCH_SIZE = 32
 EPOCH = 100000000
 LEARNING_RATE_BASE = 0.01
 LEARNING_RATE_DECAY = 0.99
@@ -27,6 +27,7 @@ TRAINING_SIZE = 100000000000
 MODEL_SAVE_PATH = './models'
 MODEL_NAME = 'test.ckpt'
 LOG_SAVE_PATH = './logs'
+NUM_GPUS = 2
 
 
 parser = argparse.ArgumentParser()
@@ -76,12 +77,13 @@ def train():
                 _, training_loss, step = sess.run(
                     [train_op, train_loss, global_step])
 
-                if step % 2 == 0:
-                    print 'Step {}, train loss = {}'.format(step, train_loss)
+                if step % 500 == 0:
+                    print 'Step {}, train loss = {}'.format(
+                        step, training_loss)
                     summary_str = sess.run(summary_op)
                     # train_writer.add_summary(summary_str, step)
 
-                if step % 20 == 0 or (step+1) == TRAINING_STEPS:
+                if step % 10000 == 0 or (step+1) == TRAINING_STEPS:
                     saver.save(sess, os.path.join(MODEL_SAVE_PATH,
                                                   MODEL_NAME), global_step=global_step)
                     print 'Model {} saved'.format(step)
