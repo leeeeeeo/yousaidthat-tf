@@ -16,9 +16,10 @@ from build_data_utils import read_and_decode
 import argparse
 import logging
 import traceback
+import time
 
 
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 EPOCH = 100000000
 LEARNING_RATE_BASE = 0.01
 LEARNING_RATE_DECAY = 0.99
@@ -29,10 +30,13 @@ MODEL_NAME = 'test.ckpt'
 LOG_SAVE_PATH = './logs'
 NUM_GPUS = 2
 
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    '--tfrecords', help='tfrecords path', type=str)
+    '--tfrecords', help='tfrecords path', default='../../../data/lrw1018/lipread_mp4/MIGHT/test/test.tfrecords', type=str)
 args = parser.parse_args()
 
 
@@ -48,8 +52,8 @@ def train():
     audio_batch = tf.cast(audio_batch, dtype=tf.float32)
     identity5_batch = tf.cast(identity5_batch, dtype=tf.float32)
 
-    # graph = tf.Graph()
-    # with graph.as_default():
+    # for i in xrange(NUM_GPUS):
+    #     with tf.device('/gpu:%d' % i):
 
     speech2vid = speech2vid_inference.Speech2Vid()
     prediction = speech2vid.inference(
@@ -64,24 +68,29 @@ def train():
     # train_writer = tf.summary.FileWriter(LOG_SAVE_PATH, graph)
     saver = tf.train.Saver()
 
-    with tf.Session() as sess:
+    with tf.Session(config=config) as sess:
         sess.run(tf.global_variables_initializer())
 
         coord = tf.train.Coordinator()
         threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
         try:
+            start_time = time.time()
             for step in np.arange(TRAINING_STEPS):
                 if coord.should_stop():
                     break
+
                 _, training_loss, step = sess.run(
                     [train_op, train_loss, global_step])
 
                 if step % 500 == 0:
-                    print 'Step {}, train loss = {}'.format(
-                        step, training_loss)
+                    end_time = time.time()
+                    elapsed_time = end_time-start_time
+                    print 'Step: {}, Train loss: {}, Elapsed time: {}'.format(
+                        step, training_loss, elapsed_time)
                     summary_str = sess.run(summary_op)
                     # train_writer.add_summary(summary_str, step)
+                    start_time = time.time()
 
                 if step % 10000 == 0 or (step+1) == TRAINING_STEPS:
                     saver.save(sess, os.path.join(MODEL_SAVE_PATH,

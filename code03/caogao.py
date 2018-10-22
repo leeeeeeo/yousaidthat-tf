@@ -43,12 +43,15 @@ from build_data_utils import read_and_decode
 import tensorflow as tf
 face_batch, audio_batch, identity5_batch = read_and_decode(
     '../../../data/lrw1018/lipread_mp4/MIGHT/test/test.tfrecords', 1, 5)
-print face_batch.shape
-print audio_batch.shape
-print identity5_batch.shape
-face_batch = tf.cast(face_batch, dtype=tf.float32)
+# print face_batch.shape
+# print audio_batch.shape
+# print identity5_batch.shape
+# face_batch = tf.cast(face_batch, dtype=tf.float32)
 audio_batch = tf.cast(audio_batch, dtype=tf.float32)
-identity5_batch = tf.cast(identity5_batch, dtype=tf.float32)
-print face_batch.shape
+# identity5_batch = tf.cast(identity5_batch, dtype=tf.float32)
+# print face_batch.shape
 print audio_batch.shape
-print identity5_batch.shape
+# print identity5_batch.shape
+
+with tf.Session() as sess:
+    sess.run(audio_batch[:, 1:3, 1:3, :])

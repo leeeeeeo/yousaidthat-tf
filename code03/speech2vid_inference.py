@@ -283,25 +283,6 @@ class Speech2Vid:
 
 
 
-                    # old
-                    # filt = tf.constant(self.config_dict[name][0], name='filter')
-                    # strides=tf.constant(self.config_dict[name][1],name='strides')
-
-                    # top_padding=np.zeros((bottom.shape[0],padding_mode[0],bottom.shape[2],bottom.shape[3]))
-                    # bottom_padding=np.zeros((bottom.shape[0],padding_mode[1],bottom.shape[2],bottom.shape[3]))
-                    # left_padding=np.zeros((bottom.shape[0],bottom.shape[1],padding_mode[2],bottom.shape[3]))
-                    # right_padding=np.zeros((bottom.shape[0],bottom.shape[1],padding_mode[3],bottom.shape[3]))
-
-                    # bottom=tf.concat([top_padding,bottom],1)
-                    # bottom=tf.concat([bottom,bottom_padding],1)
-                    # bottom=tf.concat([left_padding,bottom],2)
-                    # bottom=tf.concat([bottom,right_padding],2)
-
-                    # conv = tf.nn.conv2d(bottom, filt, strides=strides, padding='VALID')
-                    # conv_biases = tf.constant(self.config_dict[name][3], name='biases')
-                    # bias = tf.nn.bias_add(conv, conv_biases)
-                    # return bias
-
     def bn_layer(self, bottom, name):
         with tf.variable_scope(name,reuse=tf.AUTO_REUSE):
             #NHWC axis=batch(N)=0

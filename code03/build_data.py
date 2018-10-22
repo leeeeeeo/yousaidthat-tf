@@ -20,9 +20,9 @@ NOTICE: lrw1016, lrw1017, lrw1018...
 parser = argparse.ArgumentParser()
 parser.add_argument(
     '--dataset', help='which dataset to process', default='lrw', type=str)
-parser.add_argument('--device', help='which device?', type=str)
+parser.add_argument('--device', help='which device?', default='mac', type=str)
 parser.add_argument(
-    '--func', help='txt: generate dataset mp4 path txt, data: preprocess dataset, tfrecords: build tfrecords', type=str)
+    '--func', help='txt: generate dataset mp4 path txt, data: preprocess dataset, tfrecords: build tfrecords', default='data', type=str)
 args = parser.parse_args()
 
 
