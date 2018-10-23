@@ -142,8 +142,6 @@ def process_one_video(video_path):
             '''face_gt'''
             face_gt = extract_face(frame_list[i])
             face_gt = cv2.resize(face_gt, (109, 109))
-            cv2.imshow('a', face_gt)
-            cv2.waitKey()
             '''mfcc_gt'''
             mfcc_gt = mfcc[1:, mfcc_start:mfcc_end]
             mfcc_gt = np.reshape(mfcc_gt, (12, 35, 1))
