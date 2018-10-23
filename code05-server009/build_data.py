@@ -25,7 +25,7 @@ parser.add_argument('--device', help='which device?', type=str)
 parser.add_argument(
     '--func', help='txt: generate dataset mp4 path txt, data: preprocess dataset, tfrecords: build tfrecords', default='data', type=str)
 parser.add_argument(
-    '--checkpoint', help='continue from checkpoint?', default=False, type=bool)
+    '--checkpoint', help='continue from checkpoint?', default=0, type=int)
 args = parser.parse_args()
 
 
@@ -120,7 +120,6 @@ def process_one_video(video_path):
     parameter: video_path
     return: face_gt, mfcc_gt, identity1, identity5[list]
     '''
-    print video_path
     audio_path = '{}/{}.wav'.format(os.path.dirname(video_path)
                                     [0], os.path.splitext(video_path)[0])
     frame_list, frame_num = extract_video(video_path)
@@ -158,14 +157,14 @@ def process_one_video(video_path):
                      identity5, video_path, success_num)
             success_num += 1
         except Exception, e:
-            print traceback.print_exc()
+            # print traceback.print_exc()
             continue
     return success_num
 
 
-def main_prepare_data(video_path_list, DATASET_CHECKPOINT_PATH):
-    processed_num = 0
-    total_num = len(video_path_list)
+def main_prepare_data(processed_num, total_num, video_path_list, DATASET_CHECKPOINT_PATH):
+    if processed_num == 0:
+        total_num = len(video_path_list)
     for video_path in video_path_list:
         success_num = process_one_video(video_path)
         processed_num += 1
@@ -173,8 +172,8 @@ def main_prepare_data(video_path_list, DATASET_CHECKPOINT_PATH):
         txt = open(DATASET_CHECKPOINT_PATH, 'w')
         txt.write(checkpoint)
         txt.close()
-        print 'processed {}/{}, success {}'.format(
-            processed_num, total_num, success_num)
+        print 'processed {}/{}, success {}, {}'.format(
+            processed_num, total_num, success_num, video_path)
 
 
 def generate_path_txt(dataset_folder):
@@ -188,7 +187,9 @@ def generate_path_txt(dataset_folder):
             if file.endswith('.mp4'):
                 video_path = os.path.join(root, file)
                 video_path_list.append(video_path)
-                txt.write(video_path+'\n')
+    random.shuffle(video_path_list)
+    for video_path in video_path_list:
+        txt.write(video_path+'\n')
     txt.close()
     print 'done generate txt, total number {}, saved in {}'.format(
         len(video_path_list), DATASET_TXT_PATH)
@@ -242,23 +243,25 @@ if __name__ == "__main__":
         U = scio.loadmat(AVGLM_PATH)
         U = U['avglm'][0][0][1][27:48]
         video_path_list = []
-        txt = open(DATASET_TXT_PATH, 'r')
-
-        if args.checkpoint:
+        if args.checkpoint == 1:
             checkpoint_txt = open(DATASET_CHECKPOINT_PATH, 'r')
             checkpoint = checkpoint_txt.readline().split(',')
             checkpoint = (checkpoint[0], checkpoint[1], checkpoint[2])
+            processed_num = int(checkpoint[0])
+            total_num = int(checkpoint[1])
+            checkpoint = checkpoint[2]
+            txt = open(DATASET_TXT_PATH, 'r')
+            txt = [line.strip('\n') for line in txt.readlines()]
+            video_path_list = txt[txt.index(checkpoint):]
+        elif args.checkpoint == 0:
+            processed_num = 0
+            total_num = 0
+            txt = open(DATASET_TXT_PATH, 'r')
             for line in txt.readlines():
                 line = line.strip('\n')
-                if line != checkpoint[2]:
-                    continue
-                else:
-                    video_path_list.append(line)
-
-        for line in txt.readlines():
-            line = line.strip('\n')
-            video_path_list.append(line)
-        main_prepare_data(video_path_list, DATASET_CHECKPOINT_PATH)
+                video_path_list.append(line)
+        main_prepare_data(processed_num, total_num,
+                          video_path_list, DATASET_CHECKPOINT_PATH)
     elif args.func == 'tfrecords':
         '''write tfrecords file'''
         print 'convert face data to tfrecords'
