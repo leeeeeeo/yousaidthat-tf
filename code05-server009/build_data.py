@@ -1,6 +1,7 @@
 import cv2
 import dlib
 import os
+import re
 import random
 import scipy.io as scio
 import glob
@@ -23,6 +24,8 @@ parser.add_argument(
 parser.add_argument('--device', help='which device?', type=str)
 parser.add_argument(
     '--func', help='txt: generate dataset mp4 path txt, data: preprocess dataset, tfrecords: build tfrecords', default='data', type=str)
+parser.add_argument(
+    '--checkpoint', help='continue from checkpoint?', default=False, type=bool)
 args = parser.parse_args()
 
 
@@ -166,7 +169,7 @@ def main_prepare_data(video_path_list, DATASET_CHECKPOINT_PATH):
     for video_path in video_path_list:
         success_num = process_one_video(video_path)
         processed_num += 1
-        checkpoint = '{}/{},{}'.format(processed_num, total_num, video_path)
+        checkpoint = '{},{},{}'.format(processed_num, total_num, video_path)
         txt = open(DATASET_CHECKPOINT_PATH, 'w')
         txt.write(checkpoint)
         txt.close()
@@ -240,6 +243,18 @@ if __name__ == "__main__":
         U = U['avglm'][0][0][1][27:48]
         video_path_list = []
         txt = open(DATASET_TXT_PATH, 'r')
+
+        if args.checkpoint:
+            checkpoint_txt = open(DATASET_CHECKPOINT_PATH, 'r')
+            checkpoint = checkpoint_txt.readline().split(',')
+            checkpoint = (checkpoint[0], checkpoint[1], checkpoint[2])
+            for line in txt.readlines():
+                line = line.strip('\n')
+                if line != checkpoint[2]:
+                    continue
+                else:
+                    video_path_list.append(line)
+
         for line in txt.readlines():
             line = line.strip('\n')
             video_path_list.append(line)
