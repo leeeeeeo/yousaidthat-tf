@@ -1,3 +1,11 @@
+## code04-server009
+使用v201中pre trained identity encoder参数
+
+1. python build_data.py --device mac --func txt: 生成所有MP4路径的TXT
+2. python build_data.py --device mac --func data: 1个MP4可以生成5个NPZ (face + mfcc + identity).
+3. python build_data.py --device mac --func tfrecords: NPZ --> TFRECORDS
+4. python speech2vid_train_finetune.py --tfrecords /path/to/tfrecords 
+
 ## code03
 1. python build_data.py --device mac --func txt: 生成所有MP4路径的TXT
 2. python build_data.py --device mac --func data: 1个MP4可以生成5个NPZ (face + mfcc + identity).
