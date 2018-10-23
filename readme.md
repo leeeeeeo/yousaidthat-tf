@@ -1,3 +1,7 @@
+## code05-server009
+  - 核对超参数
+  - 修改build_data.py: python build_data.py --device --func --dataset
+  
 ## code04-server009
 使用v201中pre trained identity encoder参数
 
