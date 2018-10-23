@@ -162,18 +162,24 @@ def process_one_video(video_path):
     return success_num
 
 
-def main_prepare_data(video_path_list):
+def main_prepare_data(video_path_list, DATASET_CHECKPOINT_PATH):
     processed_num = 0
     total_num = len(video_path_list)
     for video_path in video_path_list:
         success_num = process_one_video(video_path)
         processed_num += 1
+        checkpoint = '{}/{},{}'.format(processed_num, total_num, video_path)
+        txt = open(DATASET_CHECKPOINT_PATH, 'w')
+        txt.write(checkpoint)
+        txt.close()
         print 'processed {}/{}, success {}'.format(
             processed_num, total_num, success_num)
 
 
 def generate_path_txt(dataset_folder):
     print 'start generate txt'
+    if not os.path.exists(os.path.dirname(DATASET_TXT_PATH)):
+        os.makedirs(os.path.dirname(DATASET_TXT_PATH))
     txt = open(DATASET_TXT_PATH, 'w')
     video_path_list = []
     for root, dirs, files in os.walk(dataset_folder):
@@ -191,10 +197,12 @@ if __name__ == "__main__":
     if args.device == 'mac':
         if args.dataset == 'lrw':
             DATASET_FOLDER = '../../../data/lrw/'
-            DATASET_TXT_PATH = './lrw_video_path.txt'
+            DATASET_TXT_PATH = './txt/lrw_video_path.txt'
+            DATASET_CHECKPOINT_PATH = './txt/lrw_checkpoint.txt'
         elif args.dataset == 'voxceleb2':
             DATASET_FOLDER = '../../../data/voxceleb2/'
-            DATASET_TXT_PATH = './voxceleb2_video_path.txt'
+            DATASET_TXT_PATH = './txt/voxceleb2_video_path.txt'
+            DATASET_CHECKPOINT_PATH = './txt/voxceleb2_checkpoint.txt'
         DLIB_DAT_PATH = '../../../tools/shape_predictor_68_face_landmarks.dat'
         AVGLM_PATH = '../../../github/yousaidthat/data/avglm.mat'
         TFRECORDS_PATH = '../../../data/lrw1018/lipread_mp4/MIGHT/test/test.tfrecords'
@@ -202,10 +210,12 @@ if __name__ == "__main__":
     elif args.device == 'server009':
         if args.dataset == 'lrw':
             DATASET_FOLDER = '../../../data/lrw/'
-            DATASET_TXT_PATH = './lrw_video_path.txt'
+            DATASET_TXT_PATH = './txt/lrw_video_path.txt'
+            DATASET_CHECKPOINT_PATH = './txt/lrw_checkpoint.txt'
         elif args.dataset == 'voxceleb2':
             DATASET_FOLDER = '../../../data/voxceleb2/'
-            DATASET_TXT_PATH = './voxceleb2_video_path.txt'
+            DATASET_TXT_PATH = './txt/voxceleb2_video_path.txt'
+            DATASET_CHECKPOINT_PATH = './txt/voxceleb2_checkpoint.txt'
         DLIB_DAT_PATH = '../../../tools/shape_predictor_68_face_landmarks.dat'
         AVGLM_PATH = '../../../github/yousaidthat/data/avglm.mat'
         TFRECORDS_PATH = '../../../data/lrw1016/lipread_mp4/MIGHT/test/test.tfrecords'
@@ -213,10 +223,12 @@ if __name__ == "__main__":
     elif args.device == 'ssh':
         if args.dataset == 'lrw':
             DATASET_FOLDER = '/workspace/liuhan/work/avasyn/data/lrw/'
-            DATASET_TXT_PATH = './lrw_video_path.txt'
+            DATASET_TXT_PATH = './txt/lrw_video_path.txt'
+            DATASET_CHECKPOINT_PATH = './txt/lrw_checkpoint.txt'
         elif args.dataset == 'voxceleb2':
             DATASET_FOLDER = '/workspace/liuhan/work/avasyn/data/voxceleb2/'
-            DATASET_TXT_PATH = './voxceleb2_video_path.txt'
+            DATASET_TXT_PATH = './txt/voxceleb2_video_path.txt'
+            DATASET_CHECKPOINT_PATH = './txt/voxceleb2_checkpoint.txt'
         DLIB_DAT_PATH = '../../../../tools/shape_predictor_68_face_landmarks.dat'
         AVGLM_PATH = '../../../../github/yousaidthat/data/avglm.mat'
         TFRECORDS_PATH = '/workspace/liuhan/work/avasyn/src/face_lls/yousaidthat-tf/code02/lrw.tfrecords'
@@ -233,7 +245,7 @@ if __name__ == "__main__":
         for line in txt.readlines():
             line = line.strip('\n')
             video_path_list.append(line)
-        main_prepare_data(video_path_list)
+        main_prepare_data(video_path_list, DATASET_CHECKPOINT_PATH)
     elif args.func == 'tfrecords':
         '''write tfrecords file'''
         print 'convert face data to tfrecords'
