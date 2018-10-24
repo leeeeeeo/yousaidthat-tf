@@ -323,11 +323,11 @@ class Speech2Vid:
     
     def read_v201_param(self):
         # server009
-        v201_param_path = '/media/server009/seagate/liuhan/lls/github/yousaidthat/v201_param_cell.mat'
+        # v201_param_path = '/media/server009/seagate/liuhan/lls/github/yousaidthat/v201_param_cell.mat'
         # mac
         # v201_param_path = '/Users/lls/Documents/face/github/yousaidthat/v201_param_cell.mat'
         # ssh
-        # 
+        v201_param_path='/workspace/liuhan/work/avasyn/github/yousaidthat/v201_param_cell.mat'
         v201_param = scio.loadmat(v201_param_path)
         v201_param_dict = {}
         v201_param_list = []
