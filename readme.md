@@ -1,3 +1,6 @@
+## code06-server009
+  - 修改一些细节
+
 ## code05-server009
   - 核对超参数
   - 修改build_data.py: python build_data.py --device --func --dataset --checkpoint
