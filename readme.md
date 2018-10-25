@@ -1,3 +1,6 @@
+## code07-server009
+  - 使用所有pre-trained参数
+
 ## code06-server009
   - 修改一些细节
 
