@@ -1,0 +1,30 @@
+python ../speech2vid_train_gan_test.py \
+--tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1219/lrs2_matlab_1219_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1217/lrs2_matlab_1217_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1218/lrs2_matlab_1218_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1215/lrs2_matlab_1215_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1216/lrs2_matlab_1216_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1213/lrs2_matlab_1213_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1214/lrs2_matlab_1214_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1211/lrs2_matlab_1211_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1212/lrs2_matlab_1212_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1209/lrs2_matlab_1209_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1210/lrs2_matlab_1210_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1207/lrs2_matlab_1207_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1208/lrs2_matlab_1208_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1205/lrs2_matlab_1205_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1206/lrs2_matlab_1206_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1203/lrs2_matlab_1203_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1204/lrs2_matlab_1204_passnan.tfrecords \
+/media/server009/data/dataset/lrs2_matlab_1201/lrs2_matlab_1201_passnan.tfrecords /media/server009/data/dataset/lrs2_matlab_1202/lrs2_matlab_1202_passnan.tfrecords \
+--gpu 1 \
+--bn 1 \
+--audio 1 \
+--audiofc 1 \
+--face 1 \
+--facefc 1 \
+--decoder 1 \
+--lip 1 \
+--name train_test \
+--baselr 0.001 \
+--audiolr 0 \
+--identitylr 0.05 \
+--bnlr 0 \
+--idnum 1 \
+--xavier 0 \
+--mode gan \
+--l1weight 100 \
+--ganweight 1 
